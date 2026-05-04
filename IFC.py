@@ -3,11 +3,22 @@ import pandas as pd
 import joblib
 import os
 
-# --- PAGE CONFIG ---
+# --- 1. PAGE CONFIG ---
 st.set_page_config(page_title="Iris Species Predictor", layout="centered")
 
-# --- LOAD MODELS ---
-# We load these at the top so they are ready before the user clicks anything
+# --- 2. HIDE GITHUB ICON & STREAMLIT MENU ---
+# This CSS hides the top header (GitHub/Deploy) and the hamburger menu
+hide_st_style = """
+            <style>
+            #MainMenu {visibility: hidden;}
+            header {visibility: hidden;}
+            footer {visibility: hidden;}
+            .stAppDeployButton {display:none;}
+            </style>
+            """
+st.markdown(hide_st_style, unsafe_allow_html=True)
+
+# --- 3. LOAD MODELS ---
 try:
     model = joblib.load('iris_model.pkl')
     le = joblib.load('label_encoder.pkl')
@@ -15,21 +26,21 @@ try:
 except FileNotFoundError:
     model_loaded = False
 
-# --- HEADER ---
+# --- 4. HEADER ---
 st.title("🌸 Iris Flower Classifier")
 st.write("Enter the measurements below to identify the species.")
 
-# --- SIDEBAR / INPUTS ---
+# --- 5. SIDEBAR / INPUTS ---
 st.sidebar.header("Input Measurements")
 sl = st.sidebar.number_input("Sepal Length (cm)", min_value=0.0, max_value=10.0, value=5.1)
 sw = st.sidebar.number_input("Sepal Width (cm)", min_value=0.0, max_value=10.0, value=3.5)
 pl = st.sidebar.number_input("Petal Length (cm)", min_value=0.0, max_value=10.0, value=1.4)
 pw = st.sidebar.number_input("Petal Width (cm)", min_value=0.0, max_value=10.0, value=0.2)
 
-# --- PREDICTION LOGIC ---
+# --- 6. PREDICTION LOGIC ---
 if st.button("Predict Species"):
     if model_loaded:
-        # Create the dataframe for the model (matching your training columns)
+        # Create the dataframe for the model
         input_data = pd.DataFrame([[sl, sw, pl, pw]], 
                                  columns=['sepal_length', 'sepal_width', 'petal_length', 'petal_width'])
         
@@ -48,5 +59,4 @@ if st.button("Predict Species"):
         else:
             st.image("https://upload.wikimedia.org/wikipedia/commons/9/9f/Iris_virginica.jpg", caption="Iris Virginica", width=400)
     else:
-        st.error("⚠️ Error: 'iris_model.pkl' or 'label_encoder.pkl' not found in this folder. Please run the save code in your notebook first!")
-
+        st.error("⚠️ Error: Model files not found. Ensure .pkl files are in the repository.")
