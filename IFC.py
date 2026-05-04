@@ -6,14 +6,17 @@ import os
 # --- 1. PAGE CONFIG ---
 st.set_page_config(page_title="Iris Species Predictor", layout="centered")
 
-# --- 2. HIDE GITHUB ICON & STREAMLIT MENU ---
-# This CSS hides the top header (GitHub/Deploy) and the hamburger menu
+# --- 2. HIDE ALL STREAMLIT/GITHUB UI ELEMENTS ---
+# This CSS hides the header, the hamburger menu, the footer, 
+# the deploy button, and the floating status widget at the bottom right.
 hide_st_style = """
             <style>
             #MainMenu {visibility: hidden;}
             header {visibility: hidden;}
             footer {visibility: hidden;}
             .stAppDeployButton {display:none;}
+            [data-testid="stStatusWidget"] {display:none;}
+            #stConnectionStatus {display: none !important;}
             </style>
             """
 st.markdown(hide_st_style, unsafe_allow_html=True)
